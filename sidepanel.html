@@ -190,11 +190,11 @@
       </div>
     </div>
 
-    <!-- src is in the markup on purpose: the request starts while the parser reaches
-         this tag, before sidepanel.js is even parsed. -->
+    <!-- No src on purpose: the panel paints its loading screen first, then
+         sidepanel.js starts the navigation (see startNavigation). Otherwise the
+         side panel surface can stay blank until the cross-origin frame paints. -->
     <iframe
       id="app"
-      src="https://gemini.google.com/app"
       title="Gemini"
       allow="clipboard-read; clipboard-write; microphone; camera; autoplay; fullscreen"
     ></iframe>

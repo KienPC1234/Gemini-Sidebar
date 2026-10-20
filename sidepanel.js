@@ -175,6 +175,19 @@ document.getElementById('retry')?.addEventListener('click', () => location.reloa
 /* ------------------------------------------------------------------ */
 
 /**
+ * Start the frame only after the loading screen has been painted. Starting it from
+ * the markup saves ~10 ms, but on Chromium's side-panel surface the cross-origin frame
+ * can then claim the compositor before the panel's own content appears, which shows up
+ * as a grey panel instead of the splash.
+ */
+function startNavigation() {
+  if (!frame.getAttribute('src')) frame.src = GEMINI_URL;
+}
+
+requestAnimationFrame(() => setTimeout(startNavigation, 0));
+setTimeout(startNavigation, 150); // fallback when rAF is throttled
+
+/**
  * If the extension is reloaded/updated while this panel is open, its JS context is
  * invalidated and the panel stays as a dead, blank document. Detect that and reload
  * ourselves so the fresh sidepanel.html takes over.
@@ -188,7 +201,6 @@ setInterval(() => {
 }, 1500);
 
 /**
- * The frame already started loading from the markup (no JS on the critical path).
  * All we still verify is the DNR rule set: if it was missing when the panel opened,
  * that first navigation was blocked by X-Frame-Options, so install the rules and
  * re-navigate once — with a cache-buster, otherwise Chrome can treat the assignment
