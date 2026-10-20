@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sign in to Gemini</title>
+    <style>
+      :root {
+        color-scheme: light dark;
+        --bg: #ffffff;
+        --card: #f6f7fb;
+        --text: #1f1f22;
+        --muted: #5f6368;
+        --line: #e3e5ea;
+        --accent: #4285f4;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #131314;
+          --card: #1e1f22;
+          --text: #e8eaed;
+          --muted: #9aa0a6;
+          --line: #2f333b;
+          --accent: #8ab4f8;
+        }
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+      }
+
+      body {
+        display: grid;
+        place-items: center;
+        padding: 24px;
+        background: var(--bg);
+        color: var(--text);
+        font: 13px/1.6 "Segoe UI", system-ui, -apple-system, sans-serif;
+      }
+
+      .card {
+        width: 100%;
+        max-width: 340px;
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 20px 18px;
+        text-align: center;
+      }
+
+      .spark {
+        width: 40px;
+        height: 40px;
+        margin: 0 auto 12px;
+        border-radius: 12px;
+        display: grid;
+        place-items: center;
+        font-size: 20px;
+        color: #fff;
+        background: linear-gradient(135deg, #4285f4, #9b72cb);
+      }
+
+      h1 {
+        font-size: 14.5px;
+        margin: 0 0 6px;
+      }
+
+      p {
+        margin: 0 0 16px;
+        color: var(--muted);
+        font-size: 12.5px;
+      }
+
+      button {
+        width: 100%;
+        font: inherit;
+        font-weight: 600;
+        padding: 9px 12px;
+        border-radius: 10px;
+        border: 1px solid var(--line);
+        background: transparent;
+        color: var(--text);
+        cursor: pointer;
+      }
+
+      button + button {
+        margin-top: 8px;
+      }
+
+      button.primary {
+        background: var(--accent);
+        border-color: transparent;
+        color: #0b0b0d;
+      }
+
+      button:active {
+        transform: translateY(1px);
+      }
+
+      :focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+        border-radius: 8px;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          transition: none !important;
+        }
+      }
+
+      .note {
+        margin-top: 12px;
+        font-size: 11px;
+        color: var(--muted);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="card">
+      <div class="spark">✦</div>
+      <h1>Google blocks sign-in inside frames</h1>
+      <p>Sign in once in a normal tab, then come back — Gemini picks up the session automatically.</p>
+
+      <button class="primary" id="signin">Sign in in a new tab</button>
+      <button id="retry">I'm signed in — retry</button>
+
+      <div class="note">Only needed once per browser.</div>
+    </div>
+
+    <script src="signin.js"></script>
+  </body>
+</html>

@@ -1,0 +1,11 @@
+# Chrome writes this when an unpacked extension uses declarativeNetRequest rules
+_metadata/
+
+# Packaged builds
+*.zip
+*.crx
+*.pem
+
+# OS noise
+.DS_Store
+Thumbs.db

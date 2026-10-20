@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Gemini Sidebar settings</title>
+    <style>
+      :root {
+        color-scheme: light dark;
+        --bg: #f6f7fb;
+        --card: #ffffff;
+        --text: #1f1f22;
+        --muted: #5f6368;
+        --line: #e3e5ea;
+        --accent: #1a73e8;
+        --accent-2: #9b72cb;
+        --ok: #1e8e3e;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #16181d;
+          --card: #1f2228;
+          --text: #e8eaed;
+          --muted: #9aa0a6;
+          --line: #2f333b;
+          --accent: #8ab4f8;
+          --accent-2: #c58af9;
+          --ok: #81c995;
+        }
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        background: var(--bg);
+      }
+
+      body {
+        margin: 0 auto;
+        padding: 18px 16px 26px;
+        min-width: 380px;
+        max-width: 460px;
+        background: var(--bg);
+        color: var(--text);
+        font: 13px/1.55 "Segoe UI", system-ui, -apple-system, sans-serif;
+      }
+
+      /* Visible keyboard focus everywhere. */
+      :focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+        border-radius: 8px;
+      }
+
+      header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 16px;
+      }
+
+      .logo {
+        width: 34px;
+        height: 34px;
+        border-radius: 10px;
+        background: linear-gradient(135deg, #4285f4, var(--accent-2));
+        display: grid;
+        place-items: center;
+        color: #fff;
+        font-size: 18px;
+        flex: none;
+      }
+
+      h1 {
+        font-size: 15px;
+        margin: 0;
+        font-weight: 600;
+      }
+
+      .sub {
+        margin: 0;
+        font-size: 11.5px;
+        color: var(--muted);
+      }
+
+      .card {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 14px 15px;
+        margin-bottom: 12px;
+      }
+
+      .card.dim {
+        opacity: 0.6;
+      }
+
+      .row {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 12px;
+      }
+
+      .title {
+        font-weight: 600;
+        font-size: 13px;
+      }
+
+      .hint {
+        margin: 6px 0 10px;
+        font-size: 11.5px;
+        color: var(--muted);
+      }
+
+      .hint:last-child {
+        margin-bottom: 0;
+      }
+
+      .mode {
+        display: grid;
+        gap: 8px;
+        margin-top: 8px;
+      }
+
+      .mode label {
+        display: flex;
+        gap: 10px;
+        align-items: flex-start;
+        padding: 10px 11px;
+        border: 1px solid var(--line);
+        border-radius: 11px;
+        cursor: pointer;
+        transition: border-color 0.15s ease, background 0.15s ease;
+      }
+
+      .mode label:has(input:checked) {
+        border-color: var(--accent);
+        background: color-mix(in srgb, var(--accent) 8%, transparent);
+      }
+
+      .mode input {
+        margin: 3px 0 0;
+        accent-color: var(--accent);
+        flex: none;
+      }
+
+      .mode .desc {
+        display: block;
+        color: var(--muted);
+        font-size: 11.5px;
+        margin-top: 2px;
+      }
+
+      select,
+      input[type="range"] {
+        font: inherit;
+        accent-color: var(--accent);
+      }
+
+      select {
+        width: 100%;
+        padding: 7px 9px;
+        border-radius: 9px;
+        border: 1px solid var(--line);
+        background: var(--bg);
+        color: var(--text);
+      }
+
+      input[type="range"] {
+        width: 100%;
+        margin: 4px 0 2px;
+      }
+
+      .scale {
+        display: flex;
+        justify-content: space-between;
+        font-size: 10.5px;
+        color: var(--muted);
+      }
+
+      .switch {
+        display: flex;
+        gap: 10px;
+        align-items: flex-start;
+        cursor: pointer;
+      }
+
+      .switch input {
+        width: 16px;
+        height: 16px;
+        margin: 2px 0 0;
+        accent-color: var(--accent);
+        flex: none;
+      }
+
+      .badge {
+        display: inline-block;
+        font-size: 10px;
+        padding: 1px 6px;
+        border-radius: 999px;
+        border: 1px solid var(--line);
+        color: var(--muted);
+        margin-left: 4px;
+        vertical-align: 1px;
+      }
+
+      .actions {
+        display: flex;
+        gap: 8px;
+      }
+
+      button {
+        flex: 1;
+        font: inherit;
+        font-weight: 600;
+        padding: 9px 12px;
+        border-radius: 10px;
+        border: 1px solid var(--line);
+        background: var(--card);
+        color: var(--text);
+        cursor: pointer;
+        transition: background 0.15s ease, transform 0.05s ease;
+      }
+
+      button:hover {
+        background: color-mix(in srgb, var(--accent) 10%, var(--card));
+      }
+
+      button:active {
+        transform: translateY(1px);
+      }
+
+      button.primary {
+        background: linear-gradient(135deg, #4285f4, var(--accent-2));
+        border-color: transparent;
+        color: #fff;
+      }
+
+      ul.tips {
+        margin: 0;
+        padding-left: 18px;
+        font-size: 12px;
+        color: var(--muted);
+      }
+
+      ul.tips li {
+        margin-bottom: 5px;
+      }
+
+      kbd {
+        font: inherit;
+        font-size: 11px;
+        padding: 1px 5px;
+        border-radius: 5px;
+        border: 1px solid var(--line);
+        background: var(--bg);
+      }
+
+      #saved {
+        position: fixed;
+        left: 50%;
+        bottom: 14px;
+        transform: translate(-50%, 12px);
+        background: var(--ok);
+        color: #fff;
+        font-size: 11.5px;
+        font-weight: 600;
+        padding: 6px 14px;
+        border-radius: 999px;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.18s ease, transform 0.18s ease;
+      }
+
+      #saved.show {
+        opacity: 1;
+        transform: translate(-50%, 0);
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        #saved {
+          transition: none !important;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <header>
+      <div class="logo" aria-hidden="true">✦</div>
+      <div>
+        <h1>Gemini Sidebar</h1>
+        <p class="sub">Side panel · phone layout · instant open</p>
+      </div>
+    </header>
+
+    <main>
+      <section class="card" role="radiogroup" aria-labelledby="modeLabel">
+        <div class="title" id="modeLabel">Display mode</div>
+        <div class="mode">
+          <label>
+            <input type="radio" name="mode" value="panel" />
+            <span>
+              <b>Side panel</b><span class="badge">recommended</span>
+              <span class="desc">Chromium's native side panel, docked next to the page and kept alive across tabs.</span>
+            </span>
+          </label>
+          <label>
+            <input type="radio" name="mode" value="window" />
+            <span>
+              <b>Floating window</b>
+              <span class="desc">A frameless popup pinned to the right edge. Use it if the panel is blocked.</span>
+            </span>
+          </label>
+        </div>
+      </section>
+
+      <section class="card" id="phoneCard">
+        <label class="title" for="frameWidth">Phone frame</label>
+        <p class="hint" id="frameHint">
+          Gemini switches to its desktop layout above ~980 px, so the panel keeps a phone-sized
+          viewport. Widen the panel and it scales up to fill — no empty gutters.
+        </p>
+        <select id="frameWidth" aria-describedby="frameHint">
+          <option value="940">Fit panel — always phone layout (default)</option>
+          <option value="430">Phone 430 px (iPhone Pro Max)</option>
+          <option value="390">Phone 390 px (iPhone)</option>
+          <option value="360">Small phone 360 px</option>
+        </select>
+      </section>
+
+      <section class="card" id="windowCard">
+        <div class="row">
+          <label class="title" for="width">Floating window width</label>
+          <span class="title" style="color: var(--accent)"><span id="widthValue">400</span> px</span>
+        </div>
+        <p class="hint" id="widthHint">Only used by the floating window mode.</p>
+        <input
+          type="range"
+          id="width"
+          min="320"
+          max="640"
+          step="10"
+          value="400"
+          aria-describedby="widthHint"
+        />
+        <div class="scale" aria-hidden="true"><span>320</span><span>480</span><span>640</span></div>
+      </section>
+
+      <section class="card">
+        <label class="switch" for="preload">
+          <input type="checkbox" id="preload" />
+          <span>
+            <span class="title">Preload in the background <span class="badge">fastest</span></span>
+            <span class="hint" style="display: block; margin: 4px 0 0">
+              Keeps a minimized Gemini window ready from browser start, warming the cache, cookies and
+              connection pool for both modes. Costs ~150 MB of RAM.
+            </span>
+          </span>
+        </label>
+      </section>
+
+      <section class="card">
+        <div class="actions">
+          <button class="primary" id="openPanel">Open panel</button>
+          <button id="openWindow">Floating window</button>
+        </div>
+        <div class="actions" style="margin-top: 8px">
+          <button id="openTab">Open in a new tab</button>
+        </div>
+      </section>
+
+      <section class="card">
+        <ul class="tips">
+          <li>Click the toolbar icon, or press <kbd>Alt</kbd> + <kbd>G</kbd>.</li>
+          <li><kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>G</kbd> opens the floating window.</li>
+          <li>Blank panel? Sign in to Gemini in a normal tab first, then reopen the panel.</li>
+        </ul>
+      </section>
+    </main>
+
+    <div id="saved" role="status" aria-live="polite">Saved</div>
+
+    <script src="options.js"></script>
+  </body>
+</html>

@@ -1,0 +1,68 @@
+{
+  "manifest_version": 3,
+  "name": "Gemini Sidebar",
+  "short_name": "Gemini",
+  "version": "2.0.0",
+  "description": "Gemini in the native Chromium side panel (phone layout), one click away.",
+  "minimum_chrome_version": "116",
+  "permissions": [
+    "sidePanel",
+    "storage",
+    "contextMenus",
+    "system.display",
+    "declarativeNetRequest"
+  ],
+  "host_permissions": [
+    "https://gemini.google.com/*",
+    "https://accounts.google.com/*",
+    "https://consent.google.com/*",
+    "https://ogs.google.com/*",
+    "https://www.google.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "side_panel": {
+    "default_path": "sidepanel.html"
+  },
+  "action": {
+    "default_title": "Gemini Sidebar (Alt+G)",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "commands": {
+    "_execute_action": {
+      "suggested_key": {
+        "default": "Alt+G",
+        "mac": "Alt+G"
+      }
+    },
+    "open-window": {
+      "suggested_key": {
+        "default": "Alt+Shift+G",
+        "mac": "Alt+Shift+G"
+      },
+      "description": "Open Gemini in a floating window"
+    }
+  },
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": false
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["signin.html", "signin.js"],
+      "matches": ["https://accounts.google.com/*", "https://gemini.google.com/*"]
+    }
+  ],
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}

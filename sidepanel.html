@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Gemini</title>
+    <link rel="preconnect" href="https://gemini.google.com" />
+    <link rel="preconnect" href="https://www.gstatic.com" />
+    <link rel="preconnect" href="https://gemini.gstatic.com" />
+    <style>
+      :root {
+        color-scheme: light dark;
+        /* Same surface as Gemini so a wide panel never shows contrasting edges. */
+        --surface: #ffffff;
+        --edge: rgba(0, 0, 0, 0.07);
+        --muted: #5f6368;
+        --track: rgba(66, 133, 244, 0.16);
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --surface: #131314;
+          --edge: rgba(255, 255, 255, 0.07);
+          --muted: #9aa0a6;
+          --track: rgba(138, 180, 248, 0.18);
+        }
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        overflow: hidden;
+        background: var(--surface);
+      }
+
+      /* Layout is driven by sidepanel.js: the frame either fills the panel or is
+         scaled up from a 940 px "phone viewport" (above that Gemini turns desktop). */
+      #app {
+        display: block;
+        width: 100%;
+        height: 100%;
+        border: 0;
+        background: var(--surface);
+        box-shadow: 0 0 0 1px var(--edge);
+      }
+
+      /* ---------------- Loading screen ---------------- */
+
+      #boot {
+        position: fixed;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        background: var(--surface);
+        transition: opacity 0.2s ease;
+        z-index: 2;
+      }
+
+      #boot.hide {
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .boot-inner {
+        display: grid;
+        justify-items: center;
+        gap: 14px;
+        padding-bottom: 32px;
+      }
+
+      .logo {
+        width: 46px;
+        height: 46px;
+        border-radius: 14px;
+        display: grid;
+        place-items: center;
+        font-size: 23px;
+        color: #fff;
+        background: linear-gradient(135deg, #4285f4, #9b72cb);
+        box-shadow: 0 8px 22px rgba(66, 133, 244, 0.28);
+        animation: breathe 2.4s ease-in-out infinite;
+      }
+
+      .caption {
+        font: 12.5px/1.4 "Segoe UI", system-ui, -apple-system, sans-serif;
+        color: var(--muted);
+        letter-spacing: 0.2px;
+      }
+
+      @keyframes breathe {
+        0%,
+        100% {
+          transform: scale(1);
+          opacity: 1;
+        }
+        50% {
+          transform: scale(0.94);
+          opacity: 0.82;
+        }
+      }
+
+      /* Bottom progress bar: eases toward 90% while loading, then snaps to 100%.
+         position: fixed (not absolute) so the grid layout cannot shrink it to the
+         width of the centred content. */
+      #bar {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 3px;
+        background: var(--track);
+        overflow: hidden;
+        z-index: 3;
+      }
+
+      #barFill {
+        height: 100%;
+        width: 0;
+        background: linear-gradient(90deg, #4285f4, #9b72cb);
+        box-shadow: 0 0 10px rgba(155, 114, 203, 0.55);
+        transition: width 0.25s ease-out;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .logo {
+          animation: none;
+        }
+
+        #boot,
+        #barFill {
+          transition: none;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="boot">
+      <div class="boot-inner" role="status" aria-label="Opening Gemini">
+        <div class="logo" aria-hidden="true">✦</div>
+        <div class="caption">Opening Gemini…</div>
+      </div>
+      <div
+        id="bar"
+        role="progressbar"
+        aria-label="Loading Gemini"
+        aria-valuemin="0"
+        aria-valuemax="100"
+        aria-valuenow="0"
+      >
+        <div id="barFill"></div>
+      </div>
+    </div>
+
+    <!-- src is in the markup on purpose: the request starts while the parser reaches
+         this tag, before sidepanel.js is even parsed. -->
+    <iframe
+      id="app"
+      src="https://gemini.google.com/app"
+      title="Gemini"
+      allow="clipboard-read; clipboard-write; microphone; camera; autoplay; fullscreen"
+    ></iframe>
+
+    <script src="sidepanel.js"></script>
+  </body>
+</html>
