@@ -17,6 +17,7 @@ const frame = document.getElementById('app');
 const boot = document.getElementById('boot');
 const bar = document.getElementById('bar');
 const barFill = document.getElementById('barFill');
+const captionText = document.getElementById('captionText');
 
 let frameLimit = FIT_WIDTH;
 
@@ -131,10 +132,46 @@ const progressTimer = setInterval(() => {
   paintProgress(progress + Math.max(0.8, (90 - progress) * 0.1));
 }, 180);
 
+/* Playful captions while waiting — purely decorative (aria-hidden). */
+const MESSAGES = [
+  'Opening Gemini…',
+  'Waking up the model…',
+  'Untangling thoughts…',
+  'Warming up the pixels…',
+  'Almost there…',
+];
+let messageIndex = 0;
+let messageTimer = null;
+let slow = false;
+
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+function startCaptions() {
+  if (reduceMotion.matches || !captionText) return;
+  messageTimer = setInterval(() => {
+    if (hidden || slow) return;
+    messageIndex = (messageIndex + 1) % MESSAGES.length;
+    captionText.classList.add('swap');
+    setTimeout(() => {
+      if (!captionText) return;
+      captionText.textContent = MESSAGES[messageIndex];
+      captionText.classList.remove('swap');
+    }, 170);
+  }, 2300);
+}
+
+startCaptions();
+reduceMotion.addEventListener('change', () => {
+  clearInterval(messageTimer);
+  messageTimer = null;
+  startCaptions();
+});
+
 function hideBoot() {
   if (hidden || !boot) return;
   hidden = true;
   clearInterval(progressTimer);
+  clearInterval(messageTimer);
   paintProgress(100);
   setTimeout(() => {
     boot.classList.add('hide');
@@ -165,7 +202,9 @@ setTimeout(hideBoot, 12000);
 
 // After 7 s, offer a manual escape hatch (blocked frame, dead network, …).
 setTimeout(() => {
-  if (!hidden && boot) boot.classList.add('slow');
+  if (hidden || !boot) return;
+  slow = true;
+  boot.classList.add('slow');
 }, 7000);
 
 document.getElementById('retry')?.addEventListener('click', () => location.reload());

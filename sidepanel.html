@@ -72,7 +72,17 @@
         padding-bottom: 32px;
       }
 
+      /* ---- logo + orbiting sparkles ---- */
+      .logo-wrap {
+        position: relative;
+        width: 96px;
+        height: 96px;
+        display: grid;
+        place-items: center;
+      }
+
       .logo {
+        position: relative;
         width: 46px;
         height: 46px;
         border-radius: 14px;
@@ -82,13 +92,101 @@
         color: #fff;
         background: linear-gradient(135deg, #4285f4, #9b72cb);
         box-shadow: 0 8px 22px rgba(66, 133, 244, 0.28);
-        animation: breathe 2.4s ease-in-out infinite;
+        overflow: hidden;
+        animation: float 3.2s ease-in-out infinite;
       }
 
+      /* light sweeping across the tile */
+      .logo::after {
+        content: "";
+        position: absolute;
+        top: -40%;
+        left: -60%;
+        width: 40%;
+        height: 180%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.55), transparent);
+        transform: rotate(18deg);
+        animation: shine 2.8s ease-in-out infinite;
+      }
+
+      .spark {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        font-size: 11px;
+        line-height: 1;
+        color: #8ab4f8;
+        opacity: 0.95;
+        text-shadow: 0 0 7px currentColor;
+        will-change: transform;
+      }
+
+      .spark.s1 {
+        --r: 42px;
+        animation: orbit 3.4s linear infinite;
+      }
+
+      .spark.s2 {
+        --r: 35px;
+        font-size: 9px;
+        color: #c58af9;
+        animation: orbit 4.8s linear infinite reverse;
+        animation-delay: -1.2s;
+      }
+
+      .spark.s3 {
+        --r: 47px;
+        font-size: 7px;
+        color: #9b72cb;
+        animation: orbit 6.2s linear infinite;
+        animation-delay: -2.6s;
+      }
+
+      @keyframes orbit {
+        from {
+          transform: rotate(0deg) translateX(var(--r, 40px)) rotate(0deg);
+        }
+        to {
+          transform: rotate(360deg) translateX(var(--r, 40px)) rotate(-360deg);
+        }
+      }
+
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0) scale(1);
+        }
+        50% {
+          transform: translateY(-4px) scale(1.03);
+        }
+      }
+
+      @keyframes shine {
+        0% {
+          left: -60%;
+        }
+        55%,
+        100% {
+          left: 130%;
+        }
+      }
+
+      /* ---- caption ---- */
       .caption {
         font: 12.5px/1.4 "Segoe UI", system-ui, -apple-system, sans-serif;
         color: var(--muted);
         letter-spacing: 0.2px;
+        min-height: 18px;
+      }
+
+      #captionText {
+        display: inline-block;
+        transition: opacity 0.16s ease, transform 0.16s ease;
+      }
+
+      #captionText.swap {
+        opacity: 0;
+        transform: translateY(-3px);
       }
 
       /* Escape hatch if the frame never finishes loading. */
@@ -121,21 +219,19 @@
         display: inline;
       }
 
-      @keyframes breathe {
-        0%,
-        100% {
-          transform: scale(1);
-          opacity: 1;
-        }
-        50% {
-          transform: scale(0.94);
-          opacity: 0.82;
-        }
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        margin: -1px;
+        padding: 0;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+        white-space: nowrap;
+        border: 0;
       }
 
-      /* Bottom progress bar: eases toward 90% while loading, then snaps to 100%.
-         position: fixed (not absolute) so the grid layout cannot shrink it to the
-         width of the centred content. */
+      /* ---- bottom progress bar ---- */
       #bar {
         position: fixed;
         left: 0;
@@ -156,12 +252,19 @@
       }
 
       @media (prefers-reduced-motion: reduce) {
-        .logo {
+        .logo,
+        .logo::after,
+        .spark {
           animation: none;
         }
 
+        .spark {
+          display: none;
+        }
+
         #boot,
-        #barFill {
+        #barFill,
+        #captionText {
           transition: none;
         }
       }
@@ -170,14 +273,24 @@
 
   <body>
     <div id="boot">
-      <div class="boot-inner" role="status" aria-label="Opening Gemini">
-        <div class="logo" aria-hidden="true">✦</div>
-        <div class="caption">
-          <span class="loading-text">Opening Gemini…</span>
+      <div class="boot-inner">
+        <div class="logo-wrap" aria-hidden="true">
+          <div class="logo">✦</div>
+          <span class="spark s1">✦</span>
+          <span class="spark s2">✦</span>
+          <span class="spark s3">✦</span>
+        </div>
+
+        <div class="caption" aria-hidden="true">
+          <span class="loading-text" id="captionText">Opening Gemini…</span>
           <span class="slow-text">Still loading…</span>
         </div>
+
         <button id="retry" type="button">Reload panel</button>
       </div>
+
+      <div class="sr-only" role="status">Loading Gemini</div>
+
       <div
         id="bar"
         role="progressbar"
