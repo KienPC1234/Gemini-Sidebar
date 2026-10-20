@@ -28,6 +28,7 @@ const DEFAULTS = {
 
 const MENU = {
   panel: 'open-panel',
+  reload: 'reload-panel',
   window: 'open-window',
   tab: 'open-tab',
   options: 'open-options',
@@ -368,6 +369,7 @@ const openOptions = () => chrome.runtime.openOptionsPage();
 function setupMenus() {
   chrome.contextMenus.removeAll(() => {
     chrome.contextMenus.create({ id: MENU.panel, title: 'Open side panel', contexts: ['action'] });
+    chrome.contextMenus.create({ id: MENU.reload, title: 'Reload panel', contexts: ['action'] });
     chrome.contextMenus.create({ id: MENU.window, title: 'Open floating window', contexts: ['action'] });
     chrome.contextMenus.create({ id: MENU.tab, title: 'Open in a new tab', contexts: ['action'] });
     chrome.contextMenus.create({ id: 'sep', type: 'separator', contexts: ['action'] });
@@ -379,6 +381,8 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
   if (info.menuItemId === MENU.panel) {
     // Synchronous: the menu click is the user gesture.
     openSidePanelNow(tab && tab.windowId);
+  } else if (info.menuItemId === MENU.reload) {
+    chrome.runtime.sendMessage({ type: 'reload-panel' }).catch(() => {});
   } else if (info.menuItemId === MENU.window) {
     serial(showWindowPanel).catch(() => {});
   } else if (info.menuItemId === MENU.tab) {

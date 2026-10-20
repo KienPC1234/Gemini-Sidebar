@@ -163,9 +163,29 @@ frame.addEventListener('load', () => {
 // Never trap the user behind the splash, whatever happens.
 setTimeout(hideBoot, 12000);
 
+// After 7 s, offer a manual escape hatch (blocked frame, dead network, …).
+setTimeout(() => {
+  if (!hidden && boot) boot.classList.add('slow');
+}, 7000);
+
+document.getElementById('retry')?.addEventListener('click', () => location.reload());
+
 /* ------------------------------------------------------------------ */
 /* Boot                                                                */
 /* ------------------------------------------------------------------ */
+
+/**
+ * If the extension is reloaded/updated while this panel is open, its JS context is
+ * invalidated and the panel stays as a dead, blank document. Detect that and reload
+ * ourselves so the fresh sidepanel.html takes over.
+ */
+setInterval(() => {
+  try {
+    if (!chrome.runtime || !chrome.runtime.id) location.reload();
+  } catch {
+    location.reload();
+  }
+}, 1500);
 
 /**
  * The frame already started loading from the markup (no JS on the critical path).
@@ -205,4 +225,9 @@ chrome.storage.onChanged.addListener((changes, area) => {
   if (area === 'local' && changes.frameWidth) {
     applyFrameWidth(changes.frameWidth.newValue);
   }
+});
+
+/** Right-click the icon → "Reload panel" reaches us here. */
+chrome.runtime.onMessage.addListener((msg) => {
+  if (msg && msg.type === 'reload-panel') location.reload();
 });

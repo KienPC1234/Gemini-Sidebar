@@ -32,10 +32,15 @@ that is Google's payload, not the extension.
 
 ## Troubleshooting
 
-- **Blank panel** → reload the extension; the panel re-installs the frame rules itself on open.
+- **Blank / grey panel** — a dev reload kills the document that is already open. Close the panel (✕) and click the icon again, or right-click the icon → **Reload panel**. The panel also reloads itself when it notices its extension context died.
+- **Stuck on "Still loading…"** — the frame never finished; press **Reload panel** on the splash.
 - **Stuck signed out** → sign in in a normal tab, then *I'm signed in — retry*, or use Floating window.
 - **`Alt+G` does nothing** → rebind at `chrome://extensions/shortcuts`.
 - **Desktop layout appeared** → raise the panel width or pick a phone frame in Settings.
+
+> Console messages like `No ID or name found in config.` or `powerPreference … ignored` come from
+> Gemini's own bundle and Chrome's WebGPU on Windows — they appear on gemini.google.com without
+> this extension too.
 
 ## Files
 

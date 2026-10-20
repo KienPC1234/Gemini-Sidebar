@@ -13,6 +13,7 @@
         /* Same surface as Gemini so a wide panel never shows contrasting edges. */
         --surface: #ffffff;
         --edge: rgba(0, 0, 0, 0.07);
+        --text: #1f1f22;
         --muted: #5f6368;
         --track: rgba(66, 133, 244, 0.16);
       }
@@ -21,6 +22,7 @@
         :root {
           --surface: #131314;
           --edge: rgba(255, 255, 255, 0.07);
+          --text: #e8eaed;
           --muted: #9aa0a6;
           --track: rgba(138, 180, 248, 0.18);
         }
@@ -89,6 +91,36 @@
         letter-spacing: 0.2px;
       }
 
+      /* Escape hatch if the frame never finishes loading. */
+      #retry {
+        display: none;
+        font: inherit;
+        font-size: 12px;
+        font-weight: 600;
+        padding: 7px 16px;
+        border-radius: 999px;
+        border: 1px solid var(--edge);
+        background: transparent;
+        color: var(--text);
+        cursor: pointer;
+      }
+
+      #boot.slow #retry {
+        display: inline-block;
+      }
+
+      .slow-text {
+        display: none;
+      }
+
+      #boot.slow .loading-text {
+        display: none;
+      }
+
+      #boot.slow .slow-text {
+        display: inline;
+      }
+
       @keyframes breathe {
         0%,
         100% {
@@ -140,7 +172,11 @@
     <div id="boot">
       <div class="boot-inner" role="status" aria-label="Opening Gemini">
         <div class="logo" aria-hidden="true">✦</div>
-        <div class="caption">Opening Gemini…</div>
+        <div class="caption">
+          <span class="loading-text">Opening Gemini…</span>
+          <span class="slow-text">Still loading…</span>
+        </div>
+        <button id="retry" type="button">Reload panel</button>
       </div>
       <div
         id="bar"
